@@ -44,7 +44,7 @@ These functions can be incredibly useful for bringing together data from multipl
 
 This tutorial provides just a few examples, to show how the code works, but links are provided to more extensive resources if this is something you are interested in learning more about.
 
-This tutorial also works much better using RStudio, compared to viewing it in the online format. Key tasks for merging and reshaping data are to check the size and structure of your dataframes at every step along the way. And this is easy in RStudio - through using the environment pane - but much more difficult when you see snippets of the data embedded in the online chunks. I would highly recommend you download this tutorial yourself and work through on your own version of RStudio. You can download a zip file containing all of the documents here.
+This tutorial also works much better using RStudio, compared to viewing it in the online format. Key tasks for merging and reshaping data are to check the size and structure of your dataframes at every step along the way. And this is easy in RStudio - through using the environment pane - but much more difficult when you see snippets of the data embedded in the online chunks. I would highly recommend you download this tutorial yourself and work through on your own version of RStudio. You can download a zip file containing all of the documents [here](https://github.com/stats4sd/r2020_8Merge/raw/main/Module8-MergeReshape.zip).
 
 You may not already have the `tidyr` library installed; so make sure you have it downloaded and then loaded before following the code in RStudio. You should already have `dplyr` installed within RStudio, but you will still need to remember to load it.
 

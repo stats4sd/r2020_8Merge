@@ -1,32 +1,48 @@
-# Merging and Reshaping data
+---
+title: "Merging and Reshaping Data"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    df_print: default
+runtime: shiny_prerendered
+description: >
+  Learn about the basic syntax of R.
+---
+
 
 ```{r setup,include=FALSE}
 library(dplyr)
 library(ggplot2)
 library(tidyr)
-library(learnr)
 
-UKIreland<-read.csv("UKIreland.csv")
+
+UKIreland<-read.csv("UKIreland.csv") 
 
 Livestock<-read.csv("UN_LivestockData.csv")
 
 
 ```
 
-
+# Merging and Reshaping data
 
 
 ## Overview
 
 This tutorial gives a short introduction to some very useful data manipulation processes:
 
-Merging datausing he `_join()` functions from within the `dplyr` library
+Merging data using he `_join()` functions from within the `dplyr` library
 
 Reshaping data using the `pivot_()` functions from the `tidyr` library
 
 These functions can be incredibly useful for bringing together data from multiple sources into a consistent tidy format ready for analysis. Trying to replicate this sort of functionality in Excel is extremely time-consuming and has high potential for human error.
 
 This tutorial provides just a few examples, to show how the code works, but links are provided to more extensive resources if this is something you are interested in learning more about.
+
+This tutorial also works much better using RStudio, compared to viewing it in the online format. Key tasks for merging and reshaping data are to check the size and structure of your dataframes at every step along the way. And this is easy in RStudio - through using the environment pane - but much more difficult when you see snippets of the data embedded in the online chunks. I would highly recommend you download this tutorial yourself and work through on your own version of RStudio. You can download a zip file containing all of the documents [here](https://github.com/stats4sd/r2020_8Merge/raw/main/Module8-MergeReshape.zip).
+
+You may not already have the `tidyr` library installed; so make sure you have it downloaded and then loaded before following the code in RStudio. You should already have `dplyr` installed within RStudio, but you will still need to remember to load it.
+
 
 ## Data for this session
 
@@ -37,8 +53,18 @@ To get to this point I have two data sets which I will need to combine and manip
 1. `UKIreland`, which has population data for the UK and Ireland between 2000 and 2018
 
 
+```{r,echo=FALSE}
+UKIreland
+```
+
+
+
 2. `Livestock`. This has data for the numbers of various different types of livestock, for all countries in the world, between 2000 and 2018.
 
+
+```{r,echo=FALSE}
+UKIreland
+```
 
 ## Full joins
 
@@ -48,7 +74,7 @@ dplyr has a number of clever functions for merging data. In all cases we need to
 `full_join()` will give us an output data frame which contains all of the rows from both datasets we are trying to merge, whether or not there is a match in the corresponding data or not. If there is no match, missing values will be filled in for the columns from the corresponding data frame.
 
 
-```{r echo=FALSE, out.width="90%", fig.align='center'}
+```{r echo=FALSE, out.width="100%", fig.align='center'}
 knitr::include_graphics("images/full.JPG")
 ```
 
@@ -120,7 +146,7 @@ https://rpubs.com/williamsurles/293454
 
 The data for cattle numbers, from `Livestock` (and now also the new object `MergedData`) is in what is known as "Wide" format. There is one column for each kind of animal. 
 
-```{r echo=FALSE, out.width="90%", fig.align='center'}
+```{r echo=FALSE, out.width="70%", fig.align='center'}
 knitr::include_graphics("images/Wide.JPG")
 ```
 
@@ -128,7 +154,7 @@ knitr::include_graphics("images/Wide.JPG")
 
 But this is not the format which R generally likes to operate on - R much prefers "long" format. Here we have one column for each "attribute". We would consider "type of animal" to be one attribute, and "number of animals" to be another attribute. 
 
-```{r echo=FALSE, out.width="90%", fig.align='center'}
+```{r echo=FALSE, out.width="60%", fig.align='center'}
 knitr::include_graphics("images/Long.JPG")
 ```
 
@@ -145,19 +171,20 @@ MergedData %>%
 
 If we pipe into the function, we need to supply three arguments:
 
-Which columns need to be reshaped. This argument is called "cols". We don't want all of the columns - we only want the ones which refer to animals. We could manually name each column we would like, or in this case where the columns we want are sequential we can use a shortcut by using a colon and saying `FirstColumn:LastColumn`. The first column of animals is `Beehives` and the last is `Turkeys`. We do not need to use quotation marks when referencing existing columns. 
+* Which columns within the data are we 'pivotting' into the long format. We don't want all of the columns - only the ones which refer to the common attribute, the number of animals. We could manually provide the name each column, or because for this data the columns we want are sequential then we can use a shortcut by using a colon: `FirstColumn:LastColumn`. The first column of number of animals is `Beehives` and the last is `Turkeys`. We do not need to use quotation marks when referencing existing columns. This argument is called "cols".   
 
-The name of the new column where the existing column names will be placed in the restructured data. This argument is called "names_to" - it requires an input within quotation marks. In this case the columns are different animals, so we can call it "Animal".
+* The name of the new column where the existing column names will be placed in the restructured data. This argument is called "names_to" - it requires an input within quotation marks. In this case the columns are different animals, so we can call it "Animal".  
 
-The name of the new column where the data values will be placed in the restructured data. This argument is called "values_to" - it requires an input within quotation marks. In this case the values refer to numbers of each animal, so we can call it "Number".
+* The name of the new column where the data values will be placed in the restructured data. This argument is called "values_to" - it requires an input within quotation marks. In this case the values refer to numbers of each animal, so we can call it "Number".  
 
 If I wasn't using a pipe, the first argument of this function would need to be the dataframe.
 
 
-Note that this new data has 408 rows - 1 row for each animal within each country within each year. But only 6 columns,
+Note that this new data has 408 rows - 1 row for each animal within each country within each year. But only 6 columns.
+
 The previous data had just 34 rows - 1 row for each country within each year. But 16 columns, because each animal had it's own column. 
 
-In RStudio, you could see this in the environment pane; or by using the `dim()` function to get the dimensions. I am going to assign the previous step into a new object and then check this.
+In RStudio, you could see this in the environment pane; or by using the `dim()` function to get the dimensions. I am going to assign the previous step into a new object, called `LongData` and then check the dimensions this way to compare between the two data frames.
 
 
 ```{r gather1, exercise=TRUE}
@@ -172,11 +199,16 @@ Having the data in long format makes it much easier to analyse, plot or manipula
 
 Remember that I wanted to calculate the rates of different animals per capita? I could have done this in the original wide format, creating a new column for every single type of animal. But in long format I only need to do this once - dividing `Number` by `Population`.
 
+I am also only interested in cows, sheep and pigs. So I can write a `filter()`. Using the  `%in%` operator is very useful to select just these animals in this case.
+
 ```{r gather2, exercise=TRUE}
 LongData %>%
-    mutate(NumberPerCapita=Number/Population)
+    mutate(NumberPerCapita=Number/Population)%>%
+      filter(Animal%in%c("Cattle","Sheep","Pigs"))
 ```
-Now that I have this we can make my comparison of cows, sheep and pigs per capita over time in the UK and Ireland. But there are a lot more animals than that, so first I need to use a `filter()`. The  `%in%` operator is very useful to select just these animals, and after I have filtered I can pipe in to make a plot.
+The `filter()` step could have been replicated by using a `select()` prior to `pivot_longer()`, so that I only had the columns I was interested in when the data was still wide.
+
+I can now pipe from that into a nice plot.
 
 ```{r plot1, exercise=TRUE}
 LongData %>%
@@ -186,7 +218,7 @@ LongData %>%
           geom_line()+
             facet_wrap(~Animal)
 ```
-Adjusting per capita makes it easy to have a fairer comparison of livestock numbers between these two very different sized countries, and plotting in this way quite clearly shows my the trends over time, and between countries and between animals. I am now slightly worried about the declining sheep population in Ireland!
+Adjusting per capita makes it easy to have a fairer comparison of livestock numbers between these two very different sized countries, and plotting in this way quite clearly shows the trends over time, and between countries and between animals. I am now slightly worried about the declining sheep population in Ireland!
 
 ## Going wide
 
@@ -194,19 +226,19 @@ Adjusting per capita makes it easy to have a fairer comparison of livestock numb
 If I wanted my data back to the original format, but including the new per capita numbers as well as the total numbers, I could reshape it back to wide format using `pivot_wider()`. 
 
 The `pivot_wider()` function is in effect the reverse of the `pivot_longer()`. So it requires the reverse inputs:
-The names column from which each unique value in this column will become one of the column names in the new data. This argument is "names_from".
-The value column from the data - which will make up the contents of these new columns. This argument is "values_from".
-
-So in this case the "names_from" column is `Animal`
-Now that we have created the `NumberPerCapita` column we have two columns of values. So we will use the `c()` function within the "values_from" argument to provide both the `Number` and `NumberPerCapita` columns,
-
 
 ```{r gather3, exercise=TRUE}
 LongData %>%
     mutate(NumberPerCapita=Number/Population) %>%
       pivot_wider(names_from=Animal,values_from=c(Number,NumberPerCapita))
 ```
-You can see that the dimensions of this new data - 34 rows and 28 columns. We now have two columns for each animal - one with the prefix "Number_" and another with a prefix "NumberPerCapita". And we are back to the original 34 rows - one for each country within each year.
+
+* The names column from which each unique value in this column will become one of the column names in the new data. This argument is "names_from".  
+* The value column from the data - which will make up the contents of these new columns. This argument is "values_from".  
+
+So in this case the "names_from" column is `Animal`. Now that we have created the `NumberPerCapita` column we have two columns of values. So we will use the `c()` function within the "values_from" argument to provide both the `Number` and `NumberPerCapita` columns,
+
+You can see that the dimensions of this new data are now 34 rows and 28 columns. We now have two columns for each animal - one with the prefix "Number_" and another with a prefix "NumberPerCapita". And we are back to the original 34 rows - one for each country within each year.
 
 
 ## More complex transformations
